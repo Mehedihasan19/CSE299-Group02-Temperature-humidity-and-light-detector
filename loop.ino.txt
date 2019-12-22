@@ -1,0 +1,85 @@
+void loop() {
+
+
+
+
+int Light=analogRead(0);
+
+
+ int outlight = map(Light, 0, 1023, 0, 100);
+
+
+  
+
+  
+  value_temp = (dht.readTemperature());
+  value_light = (outlight);
+  value_humid = (dht.readHumidity());
+
+
+
+ lcd.setCursor(0,1);
+ lcd.print("T:");
+ lcd.print(dht.readTemperature(),0);
+ lcd.print(",H:");
+ lcd.print(dht.readHumidity(),0);
+  lcd.print("%,L:");
+ lcd.print(outlight);
+ lcd.print("%");
+
+
+  
+  String temp =String(value_temp);// turn integer to string
+  String light= String(value_light);// turn integer to string
+  String humid=String(value_humid);// turn integer to string
+
+
+
+  
+  updateTS(temp,light, humid);
+  delay(3000); //
+}
+//----- update the  Thingspeak string with 3 values
+void updateTS( String T, String L , String H )
+{
+  // ESP8266 Client
+  String cmd = "AT+CIPSTART=\"TCP\",\"";// Setup TCP connection
+  cmd += IP;
+  cmd += "\",80";
+  sendDebug(cmd);
+  delay(2000);
+  if( Serial.find( "Error" ) )
+  {
+    debug.print( "RECEIVED: Error\nExit1" );
+    return;
+  }
+
+  cmd = GET + "&field1=" + T +"&field2="+ L + "&field3=" + H +"\r\n";
+  Serial.print( "AT+CIPSEND=" );
+  Serial.println( cmd.length() );
+  if(Serial.find( ">" ) )
+  {
+    debug.print(">");
+    debug.print(cmd);
+    Serial.print(cmd);
+  }
+  else
+  {
+    sendDebug( "AT+CIPCLOSE" );//close TCP connection
+  }
+  if( Serial.find("OK") )
+  {
+    debug.println( "RECEIVED: OK" );
+  }
+  else
+  {
+    debug.println( "RECEIVED: Error\nExit2" );
+  }
+}
+
+void sendDebug(String cmd)
+{
+  debug.print("SEND: ");
+  debug.println(cmd);
+  Serial.println(cmd);
+}
