@@ -1,0 +1,40 @@
+#include <SoftwareSerial.h>
+#include "DHT.h"
+#include <Wire.h>
+#include <LiquidCrystal.h>
+
+
+LiquidCrystal lcd(2,3,4,5,6,7);
+
+int value_temp;
+int value_light;
+int value_humid;
+
+#define DHTPIN 9 
+#define DHTTYPE DHT11 
+DHT dht(DHTPIN, DHTTYPE);
+
+bool metric = false;
+#define DEBUG FALSE //comment out to remove debug msgs
+
+//*-- Hardware Serial
+#define _baudrate 115200
+
+//*-- Software Serial
+//
+#define _rxpin      0                   //we used hardware serial port
+#define _txpin      1
+SoftwareSerial debug( _rxpin, _txpin ); // RX, TX
+
+//*-- IoT Information
+#define SSID "testw"
+#define PASS "876543210"
+#define IP "184.106.153.149" 
+
+
+
+
+
+
+
+String GET = "GET /update?key=E3DWHN5JTG4PVONL";
