@@ -1,0 +1,28 @@
+void setup() {
+
+   lcd.begin(16,2); 
+   Serial.begin( _baudrate );
+  debug.begin( _baudrate );
+
+ lcd.setCursor(0,0);
+ lcd.print("Weather Station ");
+ dht.begin();
+
+
+  sendDebug("AT");
+  delay(5000);
+  if(Serial.find("OK"))
+  {
+    debug.println("RECEIVED: OK\nData ready to sent!");
+   while(! connectWiFi()){
+        Serial.println("Could not find Wifi!");
+    delay(1000);
+   }
+  }
+
+
+ lcd.setCursor(0,0);
+ lcd.print("  IOT Project   ");
+  
+
+}
