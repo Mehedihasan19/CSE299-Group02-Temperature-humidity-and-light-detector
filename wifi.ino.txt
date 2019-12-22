@@ -1,0 +1,38 @@
+boolean connectWiFi()
+{
+  Serial.println("AT+CWMODE=1");//WiFi STA mode - if '3' it is both client and AP
+  delay(2000);
+  //Connect to Router with AT+CWJAP="SSID","Password";
+  // Check if connected with AT+CWJAP?
+  String cmd="AT+CWJAP=\""; // Join accespoint
+  cmd+=SSID;
+  cmd+="\",\"";
+  cmd+=PASS;
+  cmd+="\"";
+  sendDebug(cmd);
+  delay(5000);
+  if(Serial.find("OK"))
+  {
+    debug.println("RECEIVED: OK");
+    return true;
+  }
+  else
+  {
+    debug.println("RECEIVED: Error");
+    return false;
+  }
+
+  cmd = "AT+CIPMUX=0";// Set Single connection
+  sendDebug( cmd );
+  if( Serial.find( "Error") )
+  {
+    debug.print( "RECEIVED: Error" );
+    return false;
+  }
+}
+
+double Light (int RawADC0){
+double Vout=RawADC0*0.0048828125;
+int lux=(2500/Vout-500)/10;
+return lux;
+}
